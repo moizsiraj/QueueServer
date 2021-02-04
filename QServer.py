@@ -1,6 +1,4 @@
 import numpy as np
-import sys
-import pandas as pd
 
 noOfCust = 100
 rows, cols = (noOfCust, 13)
@@ -50,7 +48,21 @@ for i in range(1, noOfCust):
     arr[i][10] = round(sums[6] / i, 1)
     arr[i][11] = round((sums[6] + 1) / i, 1)
 
-print("ICK AT\t\tWT\t\tTAS\t\tST\t\tDT\t\tQS\tTIS\t\tAWT\t\tATS\t\tAQL\t\tASL\t\tUTF")
+print("IAT: Inter Arrival Time\n"
+      "AT: Arrival Time\n"
+      "WT: Waiting Time\n"
+      "TAS: Time At Service\n"
+      "ST: Service Time\n"
+      "DT: Departure Time\n"
+      "QL: Queue Length\n"
+      "TIS: Time In System\n"
+      "AWT: Average Waiting Time\n"
+      "ATS: Average Time In System\n"
+      "AQL: Average Queue Length\n"
+      "AUS: Average Users in System\n"
+      "UTF: Utilisation Factor\n")
+
+print("IAT AT\t\tWT\t\tTAS\t\tST\t\tDT\t\tQL\tTIS\t\tAWT\t\tATS\t\tAQL\t\tAUS\t\tUTF")
 s = [[str(e) for e in row] for row in arr]
 lens = [max(map(len, col)) for col in zip(*s)]
 fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
