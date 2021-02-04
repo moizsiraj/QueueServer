@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 
 noOfCust = 100
-rows, cols = (noOfCust, 12)
+rows, cols = (noOfCust, 13)
 arr = [[0 for i in range(cols)] for j in range(rows)]
 x = np.random.uniform(0, 5, noOfCust)
 y = np.random.normal(loc=10, scale=5, size=noOfCust)
@@ -19,6 +19,7 @@ else:
 arr[0][5] = round(arr[0][3] + arr[0][4], 1)
 arr[0][6] = 0
 arr[0][7] = round(arr[0][5] - arr[0][1], 1)
+arr[0][12] = round(arr[0][4] / (arr[0][5]), 3)
 
 for i in range(1, noOfCust):
     arr[i][0] = round(x[i], 1)
@@ -33,8 +34,9 @@ for i in range(1, noOfCust):
     arr[i][7] = round(arr[i][5] - arr[i][1], 1)
     data = np.array(arr)
     sums = data.sum(axis=0)
-    arr[i][8] = round(sums[2] / (i+1), 1)
-    arr[i][9] = round(sums[7] / (i+1), 1)
+    arr[i][8] = round(sums[2] / (i + 1), 1)
+    arr[i][9] = round(sums[7] / (i + 1), 1)
+    arr[i][12] = round(sums[4] / arr[i][5], 4)
 
 for i in range(1, noOfCust):
     count = 0
@@ -48,7 +50,7 @@ for i in range(1, noOfCust):
     arr[i][10] = round(sums[6] / i, 1)
     arr[i][11] = round((sums[6] + 1) / i, 1)
 
-print("ICK AT\t\tWT\t\tTAS\t\tST\t\tDT\t\tQS\tTIS\t\tAWT\t\tATS\t\tAQL\t\tASL")
+print("ICK AT\t\tWT\t\tTAS\t\tST\t\tDT\t\tQS\tTIS\t\tAWT\t\tATS\t\tAQL\t\tASL\t\tUTF")
 s = [[str(e) for e in row] for row in arr]
 lens = [max(map(len, col)) for col in zip(*s)]
 fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
