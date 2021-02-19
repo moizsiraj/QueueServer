@@ -1,10 +1,13 @@
 import numpy as np
 
-noOfCust = 100
+noOfCust = 200
+interArrivalMax = 10
+servingMean = 20
+servingSd = 5
 rows, cols = (noOfCust, 13)
 arr = [[0 for i in range(cols)] for j in range(rows)]
-x = np.random.uniform(0, 5, noOfCust)
-y = np.random.normal(loc=10, scale=5, size=noOfCust)
+x = np.random.uniform(0, interArrivalMax, noOfCust)
+y = np.random.normal(loc=servingMean, scale=servingSd, size=noOfCust)
 
 arr[0][0] = round(x[0], 1)
 arr[0][1] = round(arr[0][0], 1)
@@ -48,23 +51,33 @@ for i in range(1, noOfCust):
     arr[i][10] = round(sums[6] / i, 1)
     arr[i][11] = round((sums[6] + 1) / i, 1)
 
-print("IAT: Inter Arrival Time\n"
-      "AT: Arrival Time\n"
-      "WT: Waiting Time\n"
-      "TAS: Time At Service\n"
-      "ST: Service Time\n"
-      "DT: Departure Time\n"
-      "QL: Queue Length\n"
-      "TIS: Time In System\n"
-      "AWT: Average Waiting Time\n"
-      "ATS: Average Time In System\n"
-      "AQL: Average Queue Length\n"
-      "AUS: Average Users in System\n"
-      "UTF: Utilisation Factor\n")
+f = open("output.txt", "a")
 
-print("IAT AT\t\tWT\t\tTAS\t\tST\t\tDT\t\tQL\tTIS\t\tAWT\t\tATS\t\tAQL\t\tAUS\t\tUTF")
+f.write("\n\n")
+f.write("Number of Customers: " + str(noOfCust) + "\n")
+f.write("Max Inter-Arrival Time: " + str(interArrivalMax) + "\n")
+f.write("Serving Time Mean: " + str(servingMean) + "\n")
+f.write("Serving Time Standard Deviation: " + str(servingSd) + "\n\n")
+
+f.write("IAT: Inter Arrival Time\n"
+        "AT: Arrival Time\n"
+        "WT: Waiting Time\n"
+        "TAS: Time At Service\n"
+        "ST: Service Time\n"
+        "DT: Departure Time\n"
+        "QL: Queue Length\n"
+        "TIS: Time In System\n"
+        "AWT: Average Waiting Time\n"
+        "ATS: Average Time In System\n"
+        "AQL: Average Queue Length\n"
+        "AUS: Average Users in System\n"
+        "UTF: Utilisation Factor\n")
+
+f.write("IAT AT\t\tWT\t\tTAS\t\tST\t\tDT\t\tQL\tTIS\t\tAWT\t\tATS\t\tAQL\t\tAUS\t\tUTF\n")
 s = [[str(e) for e in row] for row in arr]
 lens = [max(map(len, col)) for col in zip(*s)]
 fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
 table = [fmt.format(*row) for row in s]
-print('\n'.join(table))
+f.write('\n'.join(table))
+
+f.close()
