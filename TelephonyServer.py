@@ -20,7 +20,7 @@ class Line:
         self.totalTime = (12 * 3600) - self.created
 
     def calculate_efficiency(self):
-        self.efficiency = self.totalTimeActive / self.totalTime
+        self.efficiency = (self.totalTimeActive / (12 * 3600)) * 100
 
     def __str__(self):
         string = str(self.name) + " " + str(round(self.efficiency, 4))
@@ -85,7 +85,7 @@ while totalTime > latestEndTime:
             exitTime = head[0]
             exitLine = head[1]
             if callData.loc[index]['callStartTime'] > exitTime:
-                exitLine.update_total_time(callData.loc[index]['callDuration'])
+                exitLine.update_total_time_active(callData.loc[index]['callDuration'])
                 callData.at[index, 'Line'] = exitLine.name
                 queue.put((callData.loc[index]['callEndTime'], exitLine))
             else:
@@ -107,5 +107,5 @@ lines["efficiency"] = lines["efficiency"].astype(float)
 pd.set_option("display.max_rows", None, "display.max_columns", None)
 # print(callData)
 print(lines)
-lines.plot.bar(y="efficiency")
+lines.plot.bar(y="efficiency", color='blue')
 plt.show()
