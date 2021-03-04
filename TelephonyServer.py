@@ -23,7 +23,7 @@ class Line:
         self.efficiency = (self.totalTimeActive / (12 * 3600)) * 100
 
     def __str__(self):
-        string = str(self.name) + " " + str(round(self.efficiency, 4))
+        string = str(self.name)
         return string
 
 
@@ -85,7 +85,7 @@ while totalTime > latestEndTime:
             exitTime = head[0]
             exitLine = head[1]
             if callData.loc[index]['callStartTime'] > exitTime:
-                exitLine.update_total_time_active(callData.loc[index]['callDuration'])
+                exitLine.update_total_time(callData.loc[index]['callDuration'])
                 callData.at[index, 'Line'] = exitLine.name
                 queue.put((callData.loc[index]['callEndTime'], exitLine))
             else:

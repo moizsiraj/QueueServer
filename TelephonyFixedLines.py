@@ -53,7 +53,7 @@ totalTime = 12 * 3600
 currentTime = 0
 
 callData = pd.DataFrame(
-    columns=['callOrigin', 'interCallTime', 'callStartTime', 'callDuration', 'callEndTime', 'Line'])
+    columns=['callOrigin', 'interCallTime', 'callStartTime', 'callDuration', 'callEndTime', 'Line', 'No of Lines Busy'])
 
 originSwitch = np.random.uniform(-1, 1, 5000)
 AtoB = np.random.uniform(0, 20, 5000)
@@ -89,10 +89,16 @@ while totalTime > latestEndTime:
     exitLine = head[1]
 
     if callData.loc[index]['callStartTime'] > exitTime:
+        callData.at[index, 'No of Lines Busy'] = 0
+        for i in range(0, queue.qsize()):
+            if callData.loc[index]['callStartTime'] > queue.queue[i][0]:
+                callData.at[index, 'No of Lines Busy'] = callData.loc[index]['No of Lines Busy'] + 1
+        callData.at[index, 'No of Lines Busy'] = number_of_lines - callData.loc[index]['No of Lines Busy']
         exitLine.update_total_time_active(callData.loc[index]['callDuration'])
         callData.at[index, 'Line'] = exitLine.name
         queue.put((callData.loc[index]['callEndTime'], exitLine))
     else:
+        callData.at[index, 'No of Lines Busy'] = number_of_lines
         number_of_calls_blocked = number_of_calls_blocked + 1
         queue.put((exitTime, exitLine))
     index = index + 1
@@ -106,15 +112,22 @@ lines["efficiency"] = lines["efficiency"].astype(float)
 pd.set_option("display.max_rows", None, "display.max_columns", None)
 # print(callData)
 
-f = open("outputFixed.txt", "w")
+f = open("outputFixedLines.txt", "w")
 
+time_avg_number_of_lines_busy = (callData['No of Lines Busy'].sum() / index)
+time_avg_proportion_of_lines_busy = (lines['total time'].sum() / (12 * 3600))
+
+f.write('Number of lines: ' + str(number_of_lines) + '\n')
 f.write('Number of calls: ' + str(index) + '\n')
 f.write("Number of calls attempted from A: " + str(number_of_calls_A) + '\n')
 f.write("Number of calls attempted from B: " + str(number_of_calls_B) + '\n')
 f.write("Number of calls blocked: " + str(number_of_calls_blocked) + '\n')
-f.write("Proportion of calls blocked: " + str(number_of_calls_blocked / index) + '\n\n')
+f.write("Proportion of calls blocked: " + str(number_of_calls_blocked / index) + '\n')
+f.write("Time average number of lines are busy: " + str(time_avg_number_of_lines_busy) + '\n')
+f.write("Time average proportion of lines are busy: " + str(time_avg_proportion_of_lines_busy) + '\n\n')
 
 f.write(str(lines))
 f.close()
+print(callData)
 lines.plot.bar(y="efficiency", color='blue')
 plt.show()
